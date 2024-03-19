@@ -22,10 +22,13 @@ spring:
       path: /h2-console
 ---
 spring:
+      config:
+        activate:
+          on-profile: dev
       datasource:
         url: "jdbc:mysql://localhost/library"
         username: "root"
-        password: "audtn7204!!"
+        password: "Audtn7204!!"
         driver-class-name: com.mysql.cj.jdbc.Driver
       jpa:
         hibernate:
