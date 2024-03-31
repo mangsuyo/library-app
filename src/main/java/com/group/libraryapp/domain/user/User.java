@@ -1,8 +1,9 @@
 package com.group.libraryapp.domain.user;
 
 public class User {
-    String name;
-    Integer age;
+
+    private String name;
+    private Integer age;
 
     public User(String name, Integer age) {
         this.name = name;

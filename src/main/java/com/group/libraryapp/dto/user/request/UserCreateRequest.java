@@ -1,8 +1,8 @@
 package com.group.libraryapp.dto.user.request;
 
 public class UserCreateRequest {
-    String name;
-    Integer age;
+    private String name;
+    private Integer age;
 
     public String getName() {
         return name;
