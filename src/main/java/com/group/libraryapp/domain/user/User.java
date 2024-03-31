@@ -6,6 +6,9 @@ public class User {
     private Integer age;
 
     public User(String name, Integer age) {
+        if(name == null || name.isBlank()){
+            throw new IllegalArgumentException();
+        }
         this.name = name;
         this.age = age;
     }
