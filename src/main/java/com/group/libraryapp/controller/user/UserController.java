@@ -38,10 +38,16 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request){
-        String sql = "Update user SET name = ? WHERE id = ?";
+        String sql = "UPDATE user SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getId());
     }
 
+    @DeleteMapping("/user")
+    public void deleteUser(@RequestParam String name){
+        String sql = "DELETE FROM user WHERE name = ?";
+        jdbcTemplate.update(sql, name);
+    }
 
-    
+
+
 }
