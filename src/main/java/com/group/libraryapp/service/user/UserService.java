@@ -29,14 +29,14 @@ public class UserService {
     }
 
     public void updateUser(UserUpdateRequest request) {
-        User user = userRepository.findById(request.getId()).orElseThrow(IllegalArgumentException :: new);
-        user.upDateName(request.getName());
+        User user = userRepository.findById(request.getId()).orElseThrow(IllegalArgumentException::new);
+        user.updateName(request.getName());
         userRepository.save(user);
     }
 
     public void deleteUser(String name) {
         User user = userRepository.findByName(name);
-        if(user == null){
+        if (user == null) {
             throw new IllegalArgumentException();
         }
         userRepository.delete(user);

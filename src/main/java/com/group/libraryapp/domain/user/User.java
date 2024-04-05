@@ -13,7 +13,6 @@ public class User {
     @Column(nullable = false, length = 20, name = "name")
     private String name;
     private Integer age;
-
     protected User() {
     }
 
@@ -37,7 +36,7 @@ public class User {
         return age;
     }
 
-    public void upDateName(String name) {
+    public void updateName(String name) {
         this.name = name;
     }
 }
