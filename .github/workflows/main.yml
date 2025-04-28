@@ -1,6 +1,6 @@
 # .github/workflows/ci-cd.yml
 
-name: main
+name: ci-cd
 
 on:
   push:
@@ -10,43 +10,44 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 코드
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Java 11 설정
+      - name: Setup Java 11
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '11'
 
-      - name: gradlew 실행 권한 부여
+      - name: Grant gradlew permissions
         run: chmod +x ./gradlew
 
-      - name: Gradle 빌드 (테스트 제외)
+      - name: Build with Gradle (skip tests)
         run: ./gradlew build -x test
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 코드
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: JAR 파일 전송 (SCP)
+      - name: Transfer JAR via SCP
         uses: appleboy/scp-action@v0.1.0
         with:
-          host:     ${{ secrets.SERVER_IP }}      # ← 네 Secret 이름
+          host:     ${{ secrets.SERVER_IP }}
           username: ec2-user
-          key:      ${{ secrets.SSH_KEY }}        # ← 네 Secret 이름
-          source:   build/libs/library-app-0.0.1-SNAPSHOT.jar  # ← 여만 build/libs로
-          target:   /home/ec2-user/app/
+          key:      ${{ secrets.SSH_KEY }}
+          source:   build/libs/library-app-0.0.1-SNAPSHOT.jar
+          target:   /home/ec2-user/library-app/build/libs/
 
-      - name: 원격 서버 애플리케이션 재시작 (SSH)
+      - name: Restart app via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
           host:     ${{ secrets.SERVER_IP }}
           username: ec2-user
           key:      ${{ secrets.SSH_KEY }}
           script: |
+            cd /home/ec2-user/library-app
             pkill -f 'java -jar' || true
-            nohup java -jar /home/ec2-user/app/library-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev &
+            nohup java -jar build/libs/library-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev &
