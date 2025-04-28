@@ -1,4 +1,5 @@
 # .github/workflows/ci-cd.yml
+
 name: ci-cd
 
 on:
@@ -12,15 +13,17 @@ jobs:
       - name: Checkout 코드
         uses: actions/checkout@v3
 
-      - name: Grant gradlew permissions
+      - name: Gradle 실행 권한 부여
         run: chmod +x ./gradlew
 
       - name: Gradle 빌드 (테스트 제외)
         run: ./gradlew build -x test
 
-      - name: 빌드 결과 디버깅
+      - name: 워크스페이스 구조 디버깅
         run: |
-          echo "현재 디렉토리: $(pwd)"
+          echo "=== 현재 디렉토리 ==="
+          pwd
+          echo "=== 전체 파일 목록 ==="
           ls -R .
 
   deploy:
@@ -36,10 +39,10 @@ jobs:
           host:     ${{ secrets.SERVER_IP }}
           username: ec2-user
           key:      ${{ secrets.SSH_KEY }}
-          source:   '**/build/libs/*.jar'     
+          source:   '**/build/libs/*.jar'
           target:   /home/ec2-user/library-app/
 
-      - name: 원격 서버 재시작 (SSH)
+      - name: 서버 재시작 via SSH
         uses: appleboy/ssh-action@v0.1.0
         with:
           host:     ${{ secrets.SERVER_IP }}
